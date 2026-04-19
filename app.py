@@ -162,23 +162,6 @@ def complete(id):
 
     return redirect('/')
 
-@app.route('/view-data')
-def view_data():
-    conn = get_db()
-    cur = conn.cursor()
-
-    cur.execute("SELECT * FROM users")
-    users = cur.fetchall()
-
-    cur.execute("SELECT * FROM tasks")
-    tasks = cur.fetchall()
-
-    conn.close()
-
-    return {
-        "users": users,
-        "tasks": tasks
-    }
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
