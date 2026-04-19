@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 import sqlite3
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flask import jsonify
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
@@ -162,6 +162,25 @@ def complete(id):
 
     return redirect('/')
 
+
+@app.route('/tasks')
+def get_tasks():
+    if 'user_id' not in session:
+        return jsonify([]), 401
+
+    conn = get_db()
+    conn.row_factory = sqlite3.Row   # ✅ important for clean output
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT id, content, completed FROM tasks WHERE user_id=?",
+        (session['user_id'],)
+    )
+
+    tasks = [dict(row) for row in cur.fetchall()]
+    conn.close()
+
+    return jsonify(tasks)
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":

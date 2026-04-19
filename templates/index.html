@@ -59,5 +59,37 @@
     </div>
 </div>
 
+<script>
+async function loadTasks() {
+    const baseUrl = window.location.origin;   // 👉 current host URL
+    const res = await fetch(`${baseUrl}/tasks`);
+    const tasks = await res.json();
+
+    const taskList = document.querySelector(".task-list");
+    taskList.innerHTML = "";
+
+    tasks.forEach(task => {
+        const div = document.createElement("div");
+        div.className = "task-card " + (task.completed ? "completed" : "");
+
+        div.innerHTML = `
+            <span class="task-text">${task.content}</span>
+            <div class="actions">
+                <a href="#" onclick="completeTask(${task.id}, this)">✔</a>
+                <a href="#" onclick="deleteTask(${task.id}, this)">✖</a>
+            </div>
+        `;
+
+        taskList.appendChild(div);
+    });
+}
+
+// 🔄 refresh every 3 seconds
+setInterval(loadTasks, 3000);
+
+// initial load
+loadTasks();
+</script>
+
 </body>
 </html>
