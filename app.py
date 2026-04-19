@@ -4,12 +4,22 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"  # change in production
+app.secret_key = "supersecretkey"
+
+# ✅ Absolute DB path (IMPORTANT FIX)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "database.db")
+
+# ---------------- DB CONNECTION ----------------
+def get_db():
+    return sqlite3.connect(DB_PATH)
 
 # ---------------- DB INIT ----------------
 def init_db():
-    conn = sqlite3.connect('database.db')
+    conn = get_db()
     cur = conn.cursor()
+
+    print("Using DB at:", DB_PATH)  # debug
 
     # Users table
     cur.execute('''
@@ -20,7 +30,7 @@ def init_db():
         )
     ''')
 
-    # Tasks table (linked to user)
+    # Tasks table
     cur.execute('''
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,7 +51,7 @@ def index():
     if 'user_id' not in session:
         return redirect('/login')
 
-    conn = sqlite3.connect('database.db')
+    conn = get_db()
     cur = conn.cursor()
     cur.execute("SELECT * FROM tasks WHERE user_id=?", (session['user_id'],))
     tasks = cur.fetchall()
@@ -53,15 +63,19 @@ def index():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form['username']
+        username = request.form['username'].strip()
         password = generate_password_hash(request.form['password'])
 
-        conn = sqlite3.connect('database.db')
+        conn = get_db()
         cur = conn.cursor()
+
         try:
-            cur.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            cur.execute(
+                "INSERT INTO users (username, password) VALUES (?, ?)",
+                (username, password)
+            )
             conn.commit()
-        except:
+        except sqlite3.IntegrityError:
             return "User already exists"
 
         conn.close()
@@ -76,7 +90,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        conn = sqlite3.connect('database.db')
+        conn = get_db()
         cur = conn.cursor()
         cur.execute("SELECT * FROM users WHERE username=?", (username,))
         user = cur.fetchone()
@@ -103,7 +117,7 @@ def add():
         return redirect('/login')
 
     task = request.form['content']
-    conn = sqlite3.connect('database.db')
+    conn = get_db()
     cur = conn.cursor()
     cur.execute(
         "INSERT INTO tasks (user_id, content) VALUES (?, ?)",
@@ -111,26 +125,41 @@ def add():
     )
     conn.commit()
     conn.close()
+
     return redirect('/')
 
 # ---------------- DELETE ----------------
 @app.route('/delete/<int:id>')
 def delete(id):
-    conn = sqlite3.connect('database.db')
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    conn = get_db()
     cur = conn.cursor()
-    cur.execute("DELETE FROM tasks WHERE id=?", (id,))
+    cur.execute(
+        "DELETE FROM tasks WHERE id=? AND user_id=?",
+        (id, session['user_id'])   # ✅ SECURITY FIX
+    )
     conn.commit()
     conn.close()
+
     return redirect('/')
 
 # ---------------- COMPLETE ----------------
 @app.route('/complete/<int:id>')
 def complete(id):
-    conn = sqlite3.connect('database.db')
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    conn = get_db()
     cur = conn.cursor()
-    cur.execute("UPDATE tasks SET completed=1 WHERE id=?", (id,))
+    cur.execute(
+        "UPDATE tasks SET completed=1 WHERE id=? AND user_id=?",
+        (id, session['user_id'])   # ✅ SECURITY FIX
+    )
     conn.commit()
     conn.close()
+
     return redirect('/')
 
 # ---------------- RUN ----------------
