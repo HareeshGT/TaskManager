@@ -1,7 +1,22 @@
-<form method="POST">
-    <h2>Login</h2>
-    <input name="username" placeholder="Username" required>
-    <input name="password" type="password" placeholder="Password" required>
-    <button type="submit">Login</button>
-    <a href="/signup">Signup</a>
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="auth-container">
+    <h2>🔐 Login</h2>
+
+    <form method="POST">
+        <input name="username" placeholder="Username" required autofocus>
+        <input name="password" type="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <a href="/signup">Don't have an account? Signup</a>
+</div>
+
+</body>
+</html>
