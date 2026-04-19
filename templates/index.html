@@ -7,14 +7,40 @@
 <body>
 
 <div class="container">
-    <h1>📝 Task Manager</h1>
 
+    <!-- 🔝 Top Bar -->
+    <div class="topbar">
+        <h1>📝 Task Manager</h1>
+        <div>
+            <span>Hi, {{ session.get('username', 'User') }}</span>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- 💬 Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div style="color:red; text-align:center;">
+          {% for msg in messages %}
+            <p>{{ msg }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- ➕ Add Task -->
     <form action="/add" method="POST" class="task-form">
-        <input type="text" name="content" placeholder="Enter a new task..." required>
+        <input type="text" name="content" placeholder="Enter a new task..." required autofocus>
         <button type="submit">Add Task</button>
     </form>
 
+    <!-- 📋 Task List -->
     <div class="task-list">
+
+        {% if tasks|length == 0 %}
+            <p style="text-align:center; color:gray;">No tasks yet. Add one 🚀</p>
+        {% endif %}
+
         {% for task in tasks %}
             <div class="task-card {% if task[2] == 1 %}completed{% endif %}">
                 
@@ -29,6 +55,7 @@
 
             </div>
         {% endfor %}
+
     </div>
 </div>
 
