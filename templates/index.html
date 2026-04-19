@@ -75,13 +75,24 @@ async function loadTasks() {
         div.innerHTML = `
             <span class="task-text">${task.content}</span>
             <div class="actions">
-                <a href="#" onclick="completeTask(${task.id}, this)">✔</a>
-                <a href="#" onclick="deleteTask(${task.id}, this)">✖</a>
+                <a href="#"  class="complete" onclick="completeTask(${task.id}, this)">✔</a>
+                <a href="#"  class="delete" onclick="deleteTask(${task.id}, this)">✖</a>
             </div>
         `;
 
         taskList.appendChild(div);
     });
+}
+
+
+async function completeTask(id, el) {
+    await fetch(`/complete/${id}`, { method: "POST" });
+    el.closest(".task-card").classList.add("completed");
+}
+
+async function deleteTask(id, el) {
+    await fetch(`/delete/${id}`, { method: "POST" });
+    el.closest(".task-card").remove();
 }
 
 // 🔄 refresh every 3 seconds
