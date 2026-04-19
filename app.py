@@ -6,7 +6,7 @@ from flask import jsonify
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
-# ✅ Absolute DB path (IMPORTANT FIX)
+# ✅ Absolute DB path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "database.db")
 
@@ -138,7 +138,7 @@ def delete(id):
     cur = conn.cursor()
     cur.execute(
         "DELETE FROM tasks WHERE id=? AND user_id=?",
-        (id, session['user_id'])   # ✅ SECURITY FIX
+        (id, session['user_id'])   
     )
     conn.commit()
     conn.close()
@@ -155,7 +155,7 @@ def complete(id):
     cur = conn.cursor()
     cur.execute(
         "UPDATE tasks SET completed=1 WHERE id=? AND user_id=?",
-        (id, session['user_id'])   # ✅ SECURITY FIX
+        (id, session['user_id'])   
     )
     conn.commit()
     conn.close()
@@ -169,7 +169,7 @@ def get_tasks():
         return jsonify([]), 401
 
     conn = get_db()
-    conn.row_factory = sqlite3.Row   # ✅ important for clean output
+    conn.row_factory = sqlite3.Row   
     cur = conn.cursor()
 
     cur.execute(
