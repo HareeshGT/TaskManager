@@ -1,0 +1,87 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #667eea, #764ba2);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 400px;
+    margin: 60px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.task-form {
+    display: flex;
+    gap: 10px;
+}
+
+.task-form input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.task-form button {
+    padding: 10px 15px;
+    border: none;
+    background: #667eea;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.task-form button:hover {
+    background: #5a67d8;
+}
+
+.task-list {
+    margin-top: 20px;
+}
+
+.task-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f4f4f4;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: 0.2s;
+}
+
+.task-card:hover {
+    transform: scale(1.02);
+}
+
+.task-text {
+    font-size: 16px;
+}
+
+.completed .task-text {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.actions a {
+    margin-left: 10px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.complete {
+    color: green;
+}
+
+.delete {
+    color: red;
+}

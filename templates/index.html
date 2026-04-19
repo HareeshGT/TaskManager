@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>📝 Task Manager</h1>
+
+    <form action="/add" method="POST" class="task-form">
+        <input type="text" name="content" placeholder="Enter a new task..." required>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <div class="task-list">
+        {% for task in tasks %}
+            <div class="task-card {% if task[2] == 1 %}completed{% endif %}">
+                
+                <span class="task-text">
+                    {{ task[1] }}
+                </span>
+
+                <div class="actions">
+                    <a href="/complete/{{ task[0] }}" class="complete">✔</a>
+                    <a href="/delete/{{ task[0] }}" class="delete">✖</a>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>
