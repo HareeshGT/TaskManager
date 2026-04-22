@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 import sqlite3
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -36,7 +36,8 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             content TEXT NOT NULL,
-            completed INTEGER DEFAULT 0
+            completed INTEGER DEFAULT 0,
+            expiry_date DATETIME DEFAULT (DATETIME('now', '+1 day'))
         )
     ''')
 
@@ -100,7 +101,7 @@ def login():
             session['user_id'] = user[0]
             return redirect('/')
         else:
-            return "Invalid credentials"
+            flash("Invalid username or password")
 
     return render_template('login.html')
 
@@ -173,7 +174,7 @@ def get_tasks():
     cur = conn.cursor()
 
     cur.execute(
-        "SELECT id, content, completed FROM tasks WHERE user_id=?",
+        "SELECT id, content, completed FROM tasks WHERE user_id=? AND expiry_date > DATETIME('now')",
         (session['user_id'],)
     )
 
