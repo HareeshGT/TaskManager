@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Task</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Edit Task</h2>
+
+    <form method="POST">
+        <input type="text" name="content" value="{{ task[2] }}" required>
+        <button type="submit">Update Task</button>
+    </form>
+
+    <br>
+    <a href="/" class="logout-btn">⬅ Back</a>
+</div>
+
+</body>
+</html>

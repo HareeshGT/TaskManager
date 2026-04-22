@@ -1,64 +1,73 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Task Manager</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
 
-<!-- 🔝 Top Bar (OUTSIDE container) -->
-<div class="topbar-global">
-    <div class="topbar-content">
-        <span class="username">Hi, {{ session.get('username', 'User') }}</span>
-        <a href="/logout" class="logout-btn">🚪 Logout</a>
-    </div>
-</div>
-
-<!-- 📦 Main Card -->
-<div class="container">
-
-    <h1>📝 Task Manager</h1>
-
-    <!-- 💬 Flash Messages -->
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="flash-msg">
-          {% for msg in messages %}
-            <p>{{ msg }}</p>
-          {% endfor %}
+    <!-- 🔝 Top Bar (OUTSIDE container) -->
+    <div class="topbar-global">
+        <div class="topbar-content">
+            <span class="username">Hi, {{ session.get('username', 'User') }}</span>
+            <a href="/logout" class="logout-btn">🚪 Logout</a>
         </div>
-      {% endif %}
-    {% endwith %}
+    </div>
 
-    <!-- ➕ Add Task -->
-    <form action="/add" method="POST" class="task-form">
-        <input type="text" name="content" placeholder="Enter a new task..." required autofocus>
-        <button type="submit">Add Task</button>
-    </form>
+    <!-- 📦 Main Card -->
+    <div class="container">
 
-    <!-- 📋 Task List -->
-    <div class="task-list">
+        <h1>📝 Task Manager</h1>
 
-        {% if tasks|length == 0 %}
-            <p class="empty-msg">No tasks yet. Add one 🚀</p>
+        <!-- 💬 Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-msg">
+            {% for msg in messages %}
+            <p>{{ msg }}</p>
+            {% endfor %}
+        </div>
         {% endif %}
+        {% endwith %}
 
-        {% for task in tasks %}
+        <!-- 📋 Task List -->
+        <div class="task-list">
+
+            {% if tasks|length == 0 %}
+            <p class="empty-msg">No tasks yet. Add one 🚀</p>
+            {% endif %}
+
+            {% for task in tasks %}
             <div class="task-card {% if task[3] == 1 %}completed{% endif %}">
-                
+
                 <span class="task-text">
                     {{ task[2] }}
                 </span>
 
                 <div class="actions">
-                    <a href="/complete/{{ task[0] }}" class="complete">✔</a>
+                    <a href="/complete/{{ task[0] }}" class="complete">
+                        {% if task[3] == 1 %}
+                        ↩ <!-- undo -->
+                        {% else %}
+                        ✔ <!-- complete -->
+                        {% endif %}
+                    </a>
+                    <a href="/edittask/{{ task[0] }}" class="edit">✏</a>
                     <a href="/delete/{{ task[0] }}" class="delete">✖</a>
                 </div>
 
             </div>
-        {% endfor %}
+            {% endfor %}
 
+        </div>
+        <!-- ➕ Add Task -->
+        <form action="/add" method="POST" class="task-form">
+            <input type="text" name="content" placeholder="Enter a new task..." required autofocus>
+            <button type="submit">Add Task</button>
+        </form>
     </div>
-</div>
 </body>
+
 </html>

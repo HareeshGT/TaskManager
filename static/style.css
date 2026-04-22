@@ -188,3 +188,53 @@ h1 {
     text-decoration: none;
     color: #667eea;
 }
+/* ✔ ✖ ✏ Actions (merged clean version) */
+.actions a {
+    margin-left: 10px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+.actions a:hover {
+    transform: scale(1.2);
+}
+
+.complete {
+    color: green;
+}
+
+.edit {
+    color: #ff9800; /* orange */
+}
+
+.delete {
+    color: red;
+}
+
+/* ✏ Edit Page (added only this part) */
+.container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.container form input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+.container form button {
+    padding: 10px;
+    border: none;
+    background: #667eea;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.container form button:hover {
+    background: #5a67d8;
+}

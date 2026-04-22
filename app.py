@@ -155,15 +155,57 @@ def complete(id):
 
     conn = get_db()
     cur = conn.cursor()
+
     cur.execute(
-        "UPDATE tasks SET completed=1 WHERE id=? AND user_id=?",
-        (id, session['user_id'])   
+        "SELECT completed FROM tasks WHERE id=? AND user_id=?",
+        (id, session['user_id'])
     )
+    task = cur.fetchone()
+
+    if task:
+        new_status = 0 if task[0] == 1 else 1  # toggle
+        cur.execute(
+            "UPDATE tasks SET completed=? WHERE id=? AND user_id=?",
+            (new_status, id, session['user_id'])
+        )
+        conn.commit()
+
     conn.commit()
     conn.close()
 
     return redirect('/')
 
+@app.route('/edittask/<int:id>', methods=['GET', 'POST'])
+def edit_task(id):
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    
+    conn = get_db()
+    cur = conn.cursor()
+
+    if request.method == 'POST':
+        updated_task = request.form['content']
+
+        cur.execute(
+            "UPDATE tasks SET content=? WHERE id=? AND user_id=?",
+            (updated_task, id, session['user_id'])
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect('/')
+
+
+    cur.execute(
+        "SELECT * FROM tasks WHERE id=? AND user_id=?",
+        (id, session['user_id'])
+    )
+    task = cur.fetchone()
+    conn.close()
+
+    return render_template('edit.html', task=task)
 
 @app.route('/tasks')
 def get_tasks():
