@@ -6,21 +6,23 @@
 </head>
 <body>
 
+<!-- 🔝 Top Bar (OUTSIDE container) -->
+<div class="topbar-global">
+    <div class="topbar-content">
+        <span class="username">Hi, {{ session.get('username', 'User') }}</span>
+        <a href="/logout" class="logout-btn">🚪 Logout</a>
+    </div>
+</div>
+
+<!-- 📦 Main Card -->
 <div class="container">
 
-    <!-- 🔝 Top Bar -->
-    <div class="topbar">
-        <h1>📝 Task Manager</h1>
-        <div>
-            <span>Hi, {{ session.get('username', 'User') }}</span>
-            <a href="/logout">Logout</a>
-        </div>
-    </div>
+    <h1>📝 Task Manager</h1>
 
     <!-- 💬 Flash Messages -->
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <div style="color:red; text-align:center;">
+        <div class="flash-msg">
           {% for msg in messages %}
             <p>{{ msg }}</p>
           {% endfor %}
@@ -38,7 +40,7 @@
     <div class="task-list">
 
         {% if tasks|length == 0 %}
-            <p style="text-align:center; color:gray;">No tasks yet. Add one 🚀</p>
+            <p class="empty-msg">No tasks yet. Add one 🚀</p>
         {% endif %}
 
         {% for task in tasks %}

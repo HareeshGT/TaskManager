@@ -99,7 +99,7 @@ def login():
 
         if user and check_password_hash(user[2], password):
             session['user_id'] = user[0]
-            session['username'] = user[1]
+            session['username'] = username
             return redirect('/')
         else:
             flash("Invalid username or password")
