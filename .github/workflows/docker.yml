@@ -1,0 +1,27 @@
+name: Build & Push Docker Image
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    - name: Build Docker image
+      run: docker build -t hareeshgt7/task_manager:latest .
+
+    - name: Tag with commit SHA
+      run: docker tag hareeshgt7/task_manager:latest hareeshgt7/task_manager:${{ github.sha }}
+
+    - name: Push images
+      run: |
+        docker push hareeshgt7/task_manager:latest
+        docker push hareeshgt7/task_manager:${{ github.sha }}
