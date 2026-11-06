@@ -3,6 +3,7 @@ import sqlite3
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import jsonify
+from keep_alive import start_keep_alive
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
@@ -228,4 +229,5 @@ def get_tasks():
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
+    start_keep_alive()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
